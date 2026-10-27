@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f8f4">
+<meta name="description" content="Combinatorics Seminar AU — a space for sharing mathematical ideas, problems, and work in progress.">
+<title>Combinatorics Seminar AU</title>
+
+<style>
+:root {
+  --bg: #f8f8f4;
+  --paper: #fff;
+  --ink: #202820;
+  --muted: #73796f;
+  --line: #dedfd6;
+  --accent: #386b4b;
+  --accent-light: #e8eee6;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --width: 1060px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.75 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.wrap { width: min(var(--width), calc(100% - 48px)); margin: auto; }
+header { border-bottom: 1px solid var(--line); }
+nav {
+  min-height: 76px; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px;
+}
+.brand { text-decoration: none; font-weight: 650; letter-spacing: -.045em; font-size: 16px; }
+.brand span { color: var(--accent); }
+.nav-links { display: flex; flex-wrap: wrap; gap: 25px; }
+.nav-links a { text-decoration: none; font-size: 12px; color: var(--muted); }
+.nav-links a:hover { color: var(--accent); }
+
+.hero { padding: 100px 0 92px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 25px;
+  color: var(--accent); text-transform: uppercase; letter-spacing: .14em;
+  font-size: 10px; font-weight: 700;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+h1, h2, h3, p { margin-top: 0; }
+h1 {
+  max-width: 800px; margin-bottom: 25px; font-family: var(--serif);
+  font-weight: 400; font-size: clamp(43px, 7vw, 76px);
+  letter-spacing: -.065em; line-height: 1.06;
+}
+h1 em { color: var(--accent); font-weight: 400; }
+.hero-description { max-width: 650px; color: #5f665c; font-size: 16px; line-height: 1.9; margin-bottom: 30px; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 10px 24px; color: var(--muted); font-size: 12px; }
+.hero-meta span { display: flex; align-items: center; gap: 8px; }
+
+section { padding: 75px 0; }
+.section-heading {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 20px; margin-bottom: 32px;
+}
+.section-label {
+  margin-bottom: 8px; color: var(--accent); font-size: 10px;
+  font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+h2 { margin-bottom: 0; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(30px, 4vw, 43px); line-height: 1.2; letter-spacing: -.045em; }
+.section-note { color: var(--muted); font-size: 12px; }
+
+.about { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: start; }
+.about-copy { max-width: 620px; color: #5f665c; line-height: 1.95; }
+.about-copy p { margin-bottom: 17px; }
+.about-copy strong { color: var(--ink); font-weight: 550; }
+.schedule-box { display: grid; grid-template-columns: 1fr 1fr; margin-top: 30px; background: var(--accent-light); padding: 22px; gap: 20px; }
+.schedule-item small { display: block; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 5px; }
+.schedule-item strong { font-size: 13px; font-weight: 550; }
+
+#sessions, #past-speakers, #past-semesters { border-top: 1px solid var(--line); }
+.session-list { display: grid; gap: 14px; }
+.session-card { display: grid; grid-template-columns: 145px minmax(0, 1fr); background: var(--paper); border: 1px solid var(--line); transition: border-color .2s; }
+.session-card:hover { border-color: #aab9a9; }
+.session-date { padding: 27px 22px; border-right: 1px solid var(--line); background: #f4f5ef; }
+.session-date .number { display: block; font-family: var(--serif); font-size: 27px; letter-spacing: -.04em; line-height: 1.25; }
+.session-date .month { display: block; color: var(--accent); font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+.session-date .date-label { display: block; margin-top: 10px; font-size: 11px; color: var(--muted); }
+.session-body { padding: 25px 30px 28px; min-width: 0; }
+.session-topline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.session-number { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.session-title { font-family: var(--serif); font-size: 25px; font-weight: 400; letter-spacing: -.025em; line-height: 1.3; margin-bottom: 8px; overflow-wrap: anywhere; }
+.speaker { font-size: 12px; color: var(--muted); margin-bottom: 19px; }
+.speaker strong { color: var(--ink); font-weight: 600; }
+.abstract-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 7px; }
+.abstract { max-width: 700px; color: #62695f; font-size: 13px; line-height: 1.85; margin-bottom: 18px; white-space: pre-line; overflow-wrap: anywhere; }
+.materials { display: flex; flex-wrap: wrap; gap: 9px; padding-top: 15px; border-top: 1px solid #edeee8; }
+.material-link { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border: 1px solid var(--line); text-decoration: none; font-size: 11px; }
+.material-link:hover { background: var(--accent-light); border-color: #b9c9b7; }
+.no-materials { color: #969b91; font-size: 11px; }
+.empty-state { padding: 30px; border: 1px dashed #cdd0c5; color: var(--muted); font-size: 13px; }
+
+
+#contact {
+  border-top: 1px solid var(--line);
+  background: #eff1e9;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  border-top: 1px solid var(--line);
+}
+
+.contact-item {
+  padding: 28px 0 12px;
+}
+
+.contact-label {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.contact-item h3 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: -.03em;
+  margin-bottom: 10px;
+}
+
+.contact-copy {
+  max-width: 390px;
+  color: #62695f;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.contact-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid #9db49e;
+  padding-bottom: 4px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.contact-link:hover {
+  border-color: var(--accent);
+}
+
+@media (max-width: 650px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .contact-item {
+    padding: 22px 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .wrap { width: calc(100% - 34px); }
+  nav { padding: 18px 0; align-items: flex-start; flex-direction: column; gap: 12px; }
+  .nav-links { gap: 16px; }
+  .hero { padding: 65px 0 60px; }
+  .hero-description { font-size: 14px; }
+  section { padding: 55px 0; }
+  .about { grid-template-columns: 1fr; gap: 20px; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .session-card { grid-template-columns: 1fr; }
+  .session-date { display: flex; align-items: baseline; gap: 8px; padding: 12px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .session-date .number { font-size: 18px; }
+  .session-date .month { margin-top: 0; }
+  .session-date .date-label { margin: 0 0 0 auto; }
+  .session-body { padding: 20px 18px 22px; }
+  .session-title { font-size: 23px; }
+  .schedule-box { padding: 17px; gap: 16px; }
+  .contact-inner { align-items: flex-start; flex-direction: column; }
+  .footer-inner { flex-direction: column; gap: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
+
+
+.semester-list {
+  border-top: 1px solid var(--line);
+}
+
+.semester-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.semester-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 23px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.semester-toggle:hover .semester-name {
+  color: var(--accent);
+}
+
+.semester-name {
+  font-family: var(--serif);
+  font-size: 25px;
+  letter-spacing: -.03em;
+  transition: color .2s;
+}
+
+.semester-meta {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  font-family: var(--sans);
+  letter-spacing: 0;
+}
+
+.semester-arrow {
+  color: var(--accent);
+  font-size: 20px;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+
+.semester-toggle[aria-expanded="true"] .semester-arrow {
+  transform: rotate(180deg);
+}
+
+.semester-content {
+  padding: 0 0 26px;
+}
+
+.semester-content[hidden] {
+  display: none;
+}
+
+@media (max-width: 650px) {
+  .semester-name { font-size: 21px; }
+  .semester-toggle { padding: 19px 2px; }
+}
+
+footer {
+  padding: 23px 0;
+  border-top: 1px solid var(--line);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+@media (max-width: 650px) {
+  .footer-inner {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <nav class="wrap" aria-label="Main navigation">
+    <a class="brand" href="#home">Combinatorics <span>Seminar AU</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#sessions">Sessions</a>
+      <a href="#past-speakers">Past speakers</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="hero" id="home">
+    <div class="wrap">
+      <h1>Combinatorics<br><em>Seminar AU</em></h1>
+      <p class="hero-description">
+        A space to share problems, ideas, and works in progress.
+      </p>
+      <div class="hero-meta">
+        <span>↗ Enumerative combinatorics</span>
+        <span>↗ Additive combinatorics</span>
+        <span>↗ Graph theory</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="wrap about">
+      <div>
+        <p class="section-label">01 / About</p>
+      </div>
+      <div class="about-copy">
+        <p>The main aim of this seminar is to create a space where we can share topics, problems, and ideas in a relatively informal setting.</p>
+        <p>Presentations need not be on complete or finished work. They may explore work in progress, interesting problems, or open questions that we would like to investigate and possibly work on together.</p>
+        <p>The seminar meets <strong>once every two weeks</strong>, with each session lasting one hour. The time and venue will generally remain fixed throughout the semester.</p>
+
+        <div class="schedule-box">
+          <div class="schedule-item"><small>Frequency</small><strong>Biweekly · 1 hour</strong></div>
+          <div class="schedule-item"><small>Semester</small><strong id="semester-label">Monsoon 2026</strong></div>
+          <div class="schedule-item"><small>Time</small><strong id="seminar-time">Thursday, 6:00 PM</strong></div>
+          <div class="schedule-item"><small>Venue</small><strong id="seminar-venue">Room 400, SAS</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sessions">
+    <div class="wrap">
+      <div class="section-heading">
+        <div><p class="section-label">02 / Monsoon 2026</p><h2>Sessions</h2></div>
+        <p class="section-note" id="session-count"></p>
+      </div>
+      <div class="session-list" id="session-list"></div>
+    </div>
+  </section>
+
+<section id="past-speakers">
+  <div class="wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">03 / Archive</p>
+        <h2>Past semesters</h2>
+      </div>
+      <p class="section-note">Talks, speakers and materials</p>
+    </div>
+
+    <div class="semester-list" id="semester-list"></div>
+  </div>
+</section>
+
+
+
+  
+<section id="contact">
+  <div class="wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-label">04 / Contact</p>
+        <h2>Stay in the loop.</h2>
+      </div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-item">
+        <p class="contact-label">Mailing list</p>
+        <h3>Seminar announcements</h3>
+        <p class="contact-copy">
+          Receive updates about upcoming talks, speakers, and seminar events.
+        </p>
+        <a class="contact-link"
+           href="https://groups.google.com/u/1/a/ahduni.edu.in/g/combinatorics"
+           target="_blank"
+           rel="noopener noreferrer">
+          Join the mailing list ↗
+        </a>
+      </div>
+
+      <div class="contact-item">
+        <p class="contact-label">Organiser</p>
+        <h3>MS Siddharth</h3>
+        <p class="contact-copy">
+          Questions, suggestions, or interested in giving a talk?
+          Feel free to get in touch.
+        </p>
+        <a class="contact-link"
+           href="mailto:m.s@ahduni.edu.in">
+          m.s@ahduni.edu.in ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>Combinatorics Seminar AU</span>
+    <span>Mathematics Community, Ahmedabad University</span>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   EDIT THIS SECTION TO UPDATE THE WEBSITE
+   ========================================================= */
+
+const site = {
+  semester: "Monsoon 2026",
+  time: "Thursday, 6:00 PM",
+  venue: "Room 400, SAS",
+  email: "m.s@ahduni.edu.in"
+};
+
+const sessions = [
+  {
+    date: "15th October, 2026",
+    number: "01",
+    speaker: "Dr. Manjil Saikia",
+    affiliation: "",
+    title: "Two Classic Problems in Probability (Matching Problem and Gambler's Ruin)",
+    abstract: "I will discuss two classic problems in probability that are great ways to learn some non-trivial combinatorics. The first problem, called the matching problem, has a classical inclusion-exclusion solution and connects to Euler's constant. The second problem, called the gambler's ruin problem, has an elegant solution using recurrences.",
+    materials: [
+          {
+    label: "Download slides (PPTX)",
+    url: "files/talk-slides.pptx"
+  }
+
+    ]
+  },
+  {
+    date: "29th October, 2026",
+    number: "02",
+    speaker: "MS Siddharth",
+    affiliation: "",
+    title: "Graphs and Groups: An Introduction to Cayley Graphs and Free Groups",
+    abstract: "Add the abstract here. This can describe ongoing work, an interesting problem, or an open question for discussion.",
+    materials: []
+  }
+];
+
+// Move completed talks here from the sessions array.
+
+const pastSemesters = [
+  {
+    name: "",
+    sessions: [
+          
+        
+    ]
+  }
+];
+
+
+
+/* =========================================================
+   WEBSITE RENDERING — NO NEED TO EDIT BELOW THIS LINE
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+function renderMaterials(materials) {
+  if (!materials || !materials.length) {
+    return '<span class="no-materials">No notes or slides available yet.</span>';
+  }
+  return materials.map(item => `
+    <a class="material-link"
+       href="${escapeHTML(item.url)}"
+       target="_blank" rel="noopener noreferrer">
+      ↗ ${escapeHTML(item.label)}
+    </a>
+  `).join("");
+}
+
+function renderSession(session, index, isPast = false) {
+  return `
+    <article class="session-card">
+      <div class="session-date">
+        <span class="number">${escapeHTML(session.number || String(index + 1).padStart(2, "0"))}</span>
+        <span class="month">${isPast ? "Completed" : "Seminar"}</span>
+        <span class="date-label">${escapeHTML(session.date)}</span>
+      </div>
+      <div class="session-body">
+        <div class="session-topline">
+          <span class="session-number">Session ${escapeHTML(session.number || index + 1)}</span>
+        </div>
+        <h3 class="session-title">${escapeHTML(session.title)}</h3>
+        <p class="speaker"><strong>${escapeHTML(session.speaker)}</strong>${session.affiliation ? " · " + escapeHTML(session.affiliation) : ""}</p>
+        <p class="abstract-label">Abstract</p>
+        <p class="abstract">${escapeHTML(session.abstract)}</p>
+        <div class="materials">${renderMaterials(session.materials)}</div>
+      </div>
+    </article>
+  `;
+}
+
+function renderList(elementId, items, emptyMessage, isPast = false) {
+  const element = $(elementId);
+  if (!items.length) {
+    element.innerHTML = `<div class="empty-state">${escapeHTML(emptyMessage)}</div>`;
+    return;
+  }
+  element.innerHTML = items.map((item, index) =>
+    renderSession(item, index, isPast)
+  ).join("");
+}
+
+
+function renderSite() {
+  $("semester-label").textContent = site.semester;
+  $("seminar-time").textContent = site.time;
+  $("seminar-venue").textContent = site.venue;
+
+  $("session-count").textContent =
+    `${sessions.length} ${sessions.length === 1 ? "session" : "sessions"} listed`;
+
+  renderList(
+    "session-list",
+    sessions,
+    "New sessions will be announced here."
+  );
+
+ 
+
+  const archive = $("semester-list");
+
+  if (!pastSemesters.length) {
+    archive.innerHTML =
+      '<div class="empty-state">Past semesters will be archived here.</div>';
+    return;
+  }
+
+  archive.innerHTML = pastSemesters.map((semester, index) => {
+    const panelId = `semester-panel-${index}`;
+    const count = (semester.sessions || []).length;
+
+    return `
+      <div class="semester-item">
+        <button
+          class="semester-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="${panelId}"
+        >
+          <span>
+            <span class="semester-name">${escapeHTML(semester.name)}</span>
+            <span class="semester-meta">
+              ${count} ${count === 1 ? "talk" : "talks"}
+            </span>
+          </span>
+          <span class="semester-arrow" aria-hidden="true">↓</span>
+        </button>
+
+        <div class="semester-content" id="${panelId}" hidden>
+          <div class="session-list">
+            ${(semester.sessions || []).map((session, i) =>
+              renderSession(session, i, true)
+            ).join("") || '<div class="empty-state">No talks listed for this semester.</div>'}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  archive.querySelectorAll(".semester-toggle").forEach(button => {
+    button.addEventListener("click", () => {
+      const expanded = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!expanded));
+
+      const panel = document.getElementById(
+        button.getAttribute("aria-controls")
+      );
+      panel.hidden = expanded;
+    });
+  });
+}
+
+renderSite();
+
+</script>
+</body>
+</html>
